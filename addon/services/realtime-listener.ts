@@ -144,6 +144,7 @@ export default class RealtimeListenerService extends Service.extend({
                             const normalizedData = serializer.normalizeSingleResponse(store, modelClass, change.doc);
                             switch(change.type) {
                                 case 'added': {
+                                    console.log("running add")
                                     //const current = content.objectAt(change.newIndex);
                                     const current = content.filter( item => {
                                       return item.id === change.doc.id
