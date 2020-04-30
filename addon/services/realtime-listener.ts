@@ -144,7 +144,10 @@ export default class RealtimeListenerService extends Service.extend({
                             const normalizedData = serializer.normalizeSingleResponse(store, modelClass, change.doc);
                             switch(change.type) {
                                 case 'added': {
-                                    const current = content.objectAt(change.newIndex);
+                                    //const current = content.objectAt(change.newIndex);
+                                    const current = content.filter( item => {
+                                      return item.id === change.doc.id
+                                    }).firstObject;
                                     if (current == null || current.id !== change.doc.id ) {
                                         const doc = store.push(normalizedData) as any;
                                         content.insertAt(change.newIndex, doc._internalModel);
@@ -163,10 +166,11 @@ export default class RealtimeListenerService extends Service.extend({
                                     break;
                                 }
                                 case 'removed': {
-                                    const current = content.objectAt(change.oldIndex);
-                                    if (current && current.id == change.doc.id) {
-                                        content.removeAt(change.oldIndex);
-                                    }
+                                    store.peekRecord(modelName, change.doc.id).destroyRecord();
+                                    //const current = content.objectAt(change.oldIndex);
+                                    //if (current && current.id == change.doc.id) {
+                                    //    content.removeAt(change.oldIndex);
+                                    //}
                                     break;
                                 }
                             }
